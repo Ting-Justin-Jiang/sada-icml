@@ -1,0 +1,9 @@
+torch>=2.0.0
+torchvision>=0.15.0
+diffusers>=0.20.0
+accelerate>=0.21.0
+transformers>=4.33.0
+lpips>=0.1.4
+safetensors>=0.3.0
+pillow>=9.0.0
+tqdm>=4.64.0 
