@@ -74,7 +74,7 @@ patch.apply_patch(pipe,
 If you find this work useful, please cite our paper:
 
 ```bibtex
-@inproceedings{jiang2024sada,
+@inproceedings{jiang2025sada,
   title     = {SADA: Stability-guided Adaptive Diffusion Acceleration},
   author    = {Ting Jiang and Yixiao Wang and Hancheng Ye and Zishan Shao and Jingwei Sun and Jingyang Zhang and Zekai Chen and Jianyi Zhang and Yiran Chen and Hai Li},
   booktitle = {Proceedings of the 42nd International Conference on Machine Learning},
