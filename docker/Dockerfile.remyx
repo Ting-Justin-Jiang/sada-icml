@@ -1,0 +1,36 @@
+# syntax=docker/dockerfile:1.4
+#
+# Base Image Selection:
+# The repository's requirements.txt specifies `torch>=2.0.0` but does not pin a
+# specific version. No explicit CUDA version is required. Following the rules,
+# we select the default base image `pytorch/pytorch:2.3.0-cuda12.1-cudnn8-devel`.
+# This image includes PyTorch 2.3.0, CUDA 12.1, and essential build tools like git.
+#
+FROM pytorch/pytorch:2.3.0-cuda12.1-cudnn8-devel
+
+# Install git to ensure it is available for cloning the repository.
+RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
+
+# Set CUDA_HOME to match the version provided by the base image.
+ENV CUDA_HOME=/usr/local/cuda-12.1
+# Configure Hugging Face cache directories to reside within the application directory.
+ENV HF_HOME=/app/huggingface
+ENV HF_HUB_CACHE=/app/huggingface/hub
+
+WORKDIR /app
+
+# Clone the repository into the working directory.
+RUN git clone --depth 1 https://github.com/Ting-Justin-Jiang/sada-icml.git .
+
+# Install Python dependencies from requirements.txt.
+# We also log in to Hugging Face using a secret token. This is good practice
+# for accessing gated models, although the models in this demo are public.
+# The `huggingface-cli` tool becomes available after `pip` installs `huggingface_hub`
+# as a dependency of `diffusers`.
+RUN --mount=type=secret,id=hf_token \
+    pip install --no-cache-dir -r requirements.txt && \
+    huggingface-cli login --token "$(cat /run/secrets/hf_token)"
+
+# Set the default command to run the Stable Diffusion XL demo script.
+# This script downloads the model on first execution and generates an `output.png` image.
+CMD ["python", "xl_demo.py"]
